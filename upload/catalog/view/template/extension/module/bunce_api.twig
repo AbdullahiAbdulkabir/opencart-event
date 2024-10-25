@@ -1,0 +1,28 @@
+{{ header }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ back }}">{{ text_back }}</a></li>
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header"><i class="fas fa-cogs"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-bunce-api">
+          <div class="form-group">
+            <label for="input-api-key">{{ entry_api_key }}</label>
+            <input type="text" name="bunce_api_key" value="{{ some_setting }}" placeholder="{{ entry_api_key }}" id="input-api-key" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ button_save }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

@@ -65,7 +65,7 @@ class ControllerExtensionModuleBunceApi extends Controller
     public function triggerAbandonedCartEvent()
     {
         if ($this->isExtensionActive()) {
-            $this->log->write('Checking for abandoned carts.....');
+            $this->log->write('Checking for abandoned carts...');
             $abandoned_time = time() - ($this->config->get('bunce_api_abandoned_cart_duration') * 60);
             $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "cart` WHERE `date_added` < '" . date('Y-m-d H:i:s', $abandoned_time) . "'");
 

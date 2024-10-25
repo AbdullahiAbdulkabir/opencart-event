@@ -1,0 +1,122 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fa fa-cogs"></i> {{ heading_title }}</h1>
+        <div class="btn-group">
+          <button type="submit" form="form-bunce-api" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-success">
+            <i class="fa fa-save"></i> {{ button_save }}
+          </button>
+          <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-secondary">
+            <i class="fa fa-reply"></i> {{ button_back }}
+          </a>
+        </div>
+      </div>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      </div>
+    {% endif %}
+    
+    <form action="{{ save }}" method="post" enctype="multipart/form-data" id="form-bunce-api" class="form-horizontal">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="card-title">{{ heading_title }}</h3>
+        </div>
+        
+        <div class="card-body">
+          <!-- General Settings -->
+          <div class="mb-4">
+            <h4 class="border-bottom pb-2"><i class="fa fa-cog"></i> {{ text_general_settings }}</h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-key">{{ entry_api_key }}</label>
+                <input type="text" name="bunce_api_key" value="{{ bunce_api_key }}" placeholder="{{ entry_api_key }}" id="input-bunce-api-key" class="form-control {{ error_bunce_api_key ? 'is-invalid' : '' }}" />
+                {% if error_bunce_api_key %}
+                  <div class="error-message">{{ error_bunce_api_key }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-status">{{ entry_status }}</label>
+                <select name="bunce_api_status" id="input-bunce-api-status" class="form-control {{ error_bunce_api_status ? 'is-invalid' : '' }}">
+                  <option value="1" {% if bunce_api_status == '1' %}selected="selected"{% endif %}>{{ text_enabled }}</option>
+                  <option value="0" {% if bunce_api_status == '0' %}selected="selected"{% endif %}>{{ text_disabled }}</option>
+                </select>
+                {% if error_bunce_api_status %}
+                  <div class="error-message">{{ error_bunce_api_status }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Event Settings -->
+          <div class="mb-4">
+            <h4 class="border-bottom pb-2"><i class="fa fa-calendar-alt"></i> {{ text_event_settings }}</h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-event-id">{{ entry_event_id_checkout }}</label>
+                <input type="text" name="bunce_api_event_id" value="{{ bunce_api_event_id }}" placeholder="{{ entry_event_id_checkout }}" id="input-bunce-api-event-id" class="form-control {{ error_bunce_api_event_id ? 'is-invalid' : '' }}" />
+                {% if error_bunce_api_event_id %}
+                  <div class="error-message">{{ error_bunce_api_event_id }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-event-id-2">{{ entry_event_id_view_product }}</label>
+                <input type="text" name="bunce_api_event_id_2" value="{{ bunce_api_event_id_2 }}" placeholder="{{ entry_event_id_view_product }}" id="input-bunce-api-event-id-2" class="form-control {{ error_bunce_api_event_id_2 ? 'is-invalid' : '' }}" />
+                {% if error_bunce_api_event_id_2 %}
+                  <div class="error-message">{{ error_bunce_api_event_id_2 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-event-id-3">{{ entry_event_id_add_to_cart }}</label>
+                <input type="text" name="bunce_api_event_id_3" value="{{ bunce_api_event_id_3 }}" placeholder="{{ entry_event_id_add_to_cart }}" id="input-bunce-api-event-id-3" class="form-control {{ error_bunce_api_event_id_3 ? 'is-invalid' : '' }}" />
+                {% if error_bunce_api_event_id_3 %}
+                  <div class="error-message">{{ error_bunce_api_event_id_3 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-bunce-api-event-id-4">{{ entry_event_id_abandoned_cart }}</label>
+                <input type="text" name="bunce_api_event_id_4" value="{{ bunce_api_event_id_4 }}" placeholder="{{ entry_event_id_abandoned_cart }}" id="input-bunce-api-event-id-4" class="form-control {{ error_bunce_api_event_id_4 ? 'is-invalid' : '' }}" />
+                {% if error_bunce_api_event_id_4 %}
+                  <div class="error-message">{{ error_bunce_api_event_id_4 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label" for="input-abandoned-cart-duration">{{ entry_abandoned_cart_duration }}</label>
+                <input type="number" name="bunce_api_abandoned_cart_duration" value="{{ bunce_api_abandoned_cart_duration }}" placeholder="{{ entry_abandoned_cart_duration }}" id="input-abandoned-cart-duration" class="form-control {{ error_abandoned_cart_duration ? 'is-invalid' : '' }}" min="1" />
+                {% if error_abandoned_cart_duration %}
+                  <div class="error-message">{{ error_abandoned_cart_duration }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer text-end">
+          <button type="submit" form="form-bunce-api" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-success">
+            <i class="fa fa-save"></i> {{ button_save }}
+          </button>
+          <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-secondary">
+            <i class="fa fa-reply"></i> {{ button_back }}
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{{ footer }}

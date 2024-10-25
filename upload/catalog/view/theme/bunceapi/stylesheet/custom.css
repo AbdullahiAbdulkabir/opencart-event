@@ -1,0 +1,101 @@
+/* custom.css */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container-fluid {
+    margin-top: 20px;
+}
+
+/* Card Styles */
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+/* Input Styles */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 5px;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 5px;
+}
+
+/* Flexbox Utilities */
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        margin-top: 10px;
+    }
+
+    .card {
+        margin-bottom: 10px;
+    }
+}
+
+.invalid-feedback {
+    color: #dc3545; /* Bootstrap's danger color */
+    font-weight: bold;
+    margin-top: 0.25rem;
+}
+
+.alert {
+    margin-top: 1rem; /* Space above error alert */
+}
+
+.error-message {
+    border: 1px solid #dc3545; /* Red border */
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    padding: 10px; /* Padding for better appearance */
+    border-radius: 4px; /* Rounded corners */
+}

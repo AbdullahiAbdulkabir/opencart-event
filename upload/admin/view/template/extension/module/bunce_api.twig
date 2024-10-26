@@ -28,6 +28,14 @@
         <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
       </div>
     {% endif %}
+
+    {% if success %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <i class="fa fa-check-circle"></i> {{ success }}
+      </div>
+    {% endif %}
+
     
     <form action="{{ save }}" method="post" enctype="multipart/form-data" id="form-bunce-api" class="form-horizontal">
       <div class="card mb-4">

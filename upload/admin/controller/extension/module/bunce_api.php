@@ -14,6 +14,15 @@ class ControllerExtensionModuleBunceApi extends Controller
 
         $this->document->setTitle($this->language->get('heading_title'));
 
+        // Set success message if it exists
+        $data['success'] = isset($this->session->data['success']) ? $this->session->data['success'] : '';
+        unset($this->session->data['success']);
+
+        // Set error message if it exists
+        $data['error_warning'] = isset($this->session->data['error_warning']) ? $this->session->data['error_warning'] : '';
+        unset($this->session->data['error_warning']);
+
+
         $data['breadcrumbs'] = [];
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('text_home'),

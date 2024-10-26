@@ -3,7 +3,6 @@
 class ControllerExtensionModuleBunceApi extends Controller
 {
     // Constants for Event Types
-    const CHECKOUT_ACCESS_BEFORE_EVENT = 'Checkout page accessed - before';
     const CHECKOUT_ACCESS_AFTER_EVENT = 'Checkout page accessed - after';
     const PRODUCT_VIEWED_EVENT = 'Product viewed';
     const PRODUCT_ADDED_TO_CART_EVENT = 'Product added to cart';
@@ -19,7 +18,10 @@ class ControllerExtensionModuleBunceApi extends Controller
     public function triggerCheckoutAccessAfterEvent()
     {
         if ($this->isExtensionActive()) {
-            $this->sendEvent(self::CHECKOUT_ACCESS_AFTER_EVENT, 'bunce_api_event_id');
+
+            $payload = $this->getUserData();
+
+            $this->sendEvent(self::CHECKOUT_ACCESS_AFTER_EVENT, 'bunce_api_event_id', $payload);
         } else {
             $this->log->write('Bunce API: Extension is not active. Event not triggered.');
         }
@@ -47,11 +49,8 @@ class ControllerExtensionModuleBunceApi extends Controller
     public function triggerProductAddedToCartEvent($route, $data)
     {
         if ($this->isExtensionActive()) {
-            $this->log->write('Incoming data for product added to cart: ' . print_r($data, true));
-
             if (isset($_POST['product_id'])) {
                 $product_id = $_POST['product_id'];
-                $this->log->write('Product added to cart event triggered with product_id ' . $product_id);
                 $payload = $this->getUserData($product_id);
                 $this->sendEvent(self::PRODUCT_ADDED_TO_CART_EVENT, 'bunce_api_event_id_3', $payload);
             } else {
@@ -66,7 +65,6 @@ class ControllerExtensionModuleBunceApi extends Controller
     public function triggerAbandonedCartEvent()
     {
         if ($this->isExtensionActive()) {
-            $this->log->write('Checking for abandoned carts...');
             $abandoned_time = time() - ($this->config->get('bunce_api_abandoned_cart_duration') * 60);
             $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "cart` WHERE `date_added` < '" . date('Y-m-d H:i:s', $abandoned_time) . "'");
 
@@ -111,21 +109,28 @@ class ControllerExtensionModuleBunceApi extends Controller
     }
 
     // Private method to gather user data for payload
-    private function getUserData($product_id)
+    private function getUserData($product_id = null)
     {
-        $payload = ['product_id' => $product_id];
+        // Initialize payload with product_id if available
+        $payload = $product_id ? ['product_id' => $product_id] : [];
 
+        // Populate payload based on user login status
         if ($this->customer->isLogged()) {
-            $payload['email'] = $this->customer->getEmail();
-            $payload['customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
+            $payload += [
+                'email' => $this->customer->getEmail(),
+                'customer_name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName()
+            ];
         } else {
             $anonymous_data = $this->generateAnonymousUserData();
-            $payload['email'] = $anonymous_data['email'];
-            $payload['customer_name'] = $anonymous_data['customer_name'];
+            $payload += [
+                'email' => $anonymous_data['email'],
+                'customer_name' => $anonymous_data['customer_name']
+            ];
         }
 
         return $payload;
     }
+
 
     // Private method to generate random user data
     private function generateAnonymousUserData()
@@ -136,7 +141,8 @@ class ControllerExtensionModuleBunceApi extends Controller
         ];
     }
 
-    // Private method to send event data
+
+    // Private method to send event data with error handling
     private function sendEvent($message, $event_id_key, $additional_payload = [])
     {
         $event_id = $this->config->get($event_id_key);
@@ -151,25 +157,30 @@ class ControllerExtensionModuleBunceApi extends Controller
                 'payload' => $payload
             ];
 
-            $options = [
-                'http' => [
-                    'header' => [
-                        'X-Authorization: ' . $api_key,
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen(json_encode($data))
+            try {
+                $options = [
+                    'http' => [
+                        'header' => [
+                            'X-Authorization: ' . $api_key,
+                            'Content-Type: application/json',
+                            'Content-Length: ' . strlen(json_encode($data))
+                        ],
+                        'method' => 'POST',
+                        'content' => json_encode($data),
                     ],
-                    'method' => 'POST',
-                    'content' => json_encode($data),
-                ],
-            ];
+                ];
 
-            $context = stream_context_create($options);
-            $response = file_get_contents($url, false, $context);
+                $context = stream_context_create($options);
+                $response = file_get_contents($url, false, $context);
 
-            if ($response === FALSE) {
-                $this->log->write('Bunce API Error: Request failed.');
-            } else {
-                $this->log->write('Bunce API Response: ' . $response);
+                if ($response === FALSE) {
+                    throw new Exception('Request failed.');
+                } else {
+                    $this->log->write('Bunce API Response: ' . $response);
+                }
+            } catch (Exception $e) {
+                // Log any exceptions without displaying them
+                $this->log->write('Bunce API Error: ' . $e->getMessage());
             }
         } else {
             $this->log->write('Bunce API Error: Missing event_id or api_key');
